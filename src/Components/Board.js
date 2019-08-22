@@ -1,20 +1,21 @@
 import React from 'react'
 // import AllCharts from './AllCharts'
 import Box from '@material-ui/core/Box';
-import ProductNameInput from './ProductNames';
+import ProductNameInput from './ProductNameInput';
 import CompareProductInput from './CompareProductInput';
 import IndicatorsDropDown from './IndicatorsDropDown';
 import TemplatesDropDown from './TemplatesDropDown';
-import LineChart from './MainChart';
-import BarChart from './VolumeChart'
+// import LineChart from './MainChart';
+import VolumeChart from './VolumeChart'
 import SecondaryChart from './SecondaryChart'
+import MultiSeries from './MultiSeries'
 
 class Board extends React.Component {
 
     constructor(props) {
         super (props)
         this.state = {
-            productName : undefined, // "value" needs to be passed in from ProductNameInput 
+            productName : "", // "value" needs to be passed in from ProductNameInput 
             compareProds : [], // "value" needs to be passed in from CompareProductInput
             indicators : [], // "value" needs to be passed in from IndicatorsDropDown
             secondaryChart : [], // "value" needs to be passed in from TemplatesDropDown
@@ -39,8 +40,9 @@ class Board extends React.Component {
             357,
             357],
             test : [{x:1, y:6}, {x:2, y:2},{x:3, y:6},{x:4, y:7},{x:5, y:1},{x:6, y:6}, {x:7, y:2},{x:8, y:6},{x:9, y:7},{x:10, y:1},{x:11, y:6}, {x:12, y:2},{x:13, y:6},{x:14, y:7},{x:15, y:1},{x:16, y:6}, {x:17, y:2},{x:18, y:6},{x:19, y:7},{x:20, y:1}],
-            data : undefined,
+            data : [],
             volume: [],
+            series : [],
         }
     }
 
@@ -51,15 +53,20 @@ class Board extends React.Component {
         // the .map function takes every date and assigns is to an x key, then converts it to a date in JS
         // ... takes every value and assigns it to a y key, the [i] assigns the same index value to the y value as the x value in the dictionary
         const data = this.state.dates.map((x, i) => 
-                      ({x: new Date(x), y: this.state.values[i]}));
-//
-        this.setState({data:data}) }
+                    ({x: new Date(x), y: this.state.values[i]}));
+        this.setState({data:data})
+        this.populate()
+    }
+
+    populate() {
+        this.state.series.push({name: this.state.productName, data: this.state.test})
+    }
 
     monthly() {
         let today = new Date()
         today.setDate(today.getDate() - 30);
         const range = [today, today.getDate() - 30]
-        console.log(range)
+        // console.log(range)
         // this.setState({dates:range})
     }
 
@@ -90,7 +97,7 @@ class Board extends React.Component {
     return (
         <div> 
             <div className = "inputs">
-        <div >
+        <div>
             <Box display="flex" flexDirection="row">
             <ProductNameInput/>
             <CompareProductInput/>
@@ -105,18 +112,24 @@ class Board extends React.Component {
         <div className="panels">
             <div className="panel">
               <div>
-                <LineChart data={this.state.data}/>
+                {/* <LineChart data={this.state.data}/> */}
+                <MultiSeries margin={0} series={this.state.series}/>
               </div>
             </div>
             <div className="panel">
               <div>
-              <BarChart  volume={this.state.test}/>
+              <VolumeChart volume={this.state.test}/>
+              </div>
+            </div>
+            <div className="panel">
+              <div>
+              <SecondaryChart  volume={this.state.test}/>
               </div>
             </div>
           </div>
           </div>
         </div>
-            <div className = "timebuttons">
+            <div>
         <div>
             <Box display="flex" flexDirection="row" p={1} m={1} >
                 <button 
@@ -128,7 +141,7 @@ class Board extends React.Component {
                 <button>S</button>
                 <button>Y</button>
                 <button>A</button>
-                <div>____</div>
+                <div className = "timebuttons">____</div>
                 <button>LINEAR</button>
                 <button>CYCLIC</button>
             </Box>

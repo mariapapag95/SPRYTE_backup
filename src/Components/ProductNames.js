@@ -27,8 +27,9 @@ const suggestions = [
     
     root: {
       flexGrow: 1,
-      height: 250,
+      height: 50,
       minWidth: 250,
+      margin: 5,
     },
     input: {
       display: 'flex',

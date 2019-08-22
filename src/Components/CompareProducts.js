@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import Select from 'react-select';
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 const suggestions = [
     'N CON MEN JUL/19 - Preço Fixo',
@@ -27,8 +24,9 @@ const suggestions = [
     
     root: {
       flexGrow: 1,
-      height: 250,
+      height: 50,
       minWidth: 250,
+      margin: 5,
     },
     input: {
       display: 'flex',
@@ -263,30 +261,6 @@ const suggestions = [
     selectProps: PropTypes.object.isRequired,
   };
   
-  function MultiValue(props) {
-    return (
-      <Chip
-        tabIndex={-1}
-        label={props.children}
-        className={clsx(props.selectProps.classes.chip, {
-          [props.selectProps.classes.chipFocused]: props.isFocused,
-        })}
-        onDelete={props.removeProps.onClick}
-        deleteIcon={<CancelIcon {...props.removeProps} />}
-      />
-    );
-  }
-  
-  MultiValue.propTypes = {
-    children: PropTypes.node,
-    isFocused: PropTypes.bool.isRequired,
-    removeProps: PropTypes.shape({
-      onClick: PropTypes.func.isRequired,
-      onMouseDown: PropTypes.func.isRequired,
-      onTouchEnd: PropTypes.func.isRequired,
-    }).isRequired,
-    selectProps: PropTypes.object.isRequired,
-  };
   
   function Menu(props) {
     return (
@@ -311,7 +285,6 @@ const suggestions = [
   const components = {
     Control,
     Menu,
-    MultiValue,
     NoOptionsMessage,
     Option,
     Placeholder,
@@ -323,7 +296,6 @@ const suggestions = [
     const classes = useStyles();
     const theme = useTheme();
     const [single, setSingle] = React.useState(null);
-    const [multi, setMulti] = React.useState(null);
   
     function handleChangeSingle(value) {
       setSingle(value);
