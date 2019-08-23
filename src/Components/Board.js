@@ -1,14 +1,13 @@
 import React from 'react'
-// import AllCharts from './AllCharts'
 import Box from '@material-ui/core/Box';
-import ProductNameInput from './ProductNameInput';
-import CompareProductInput from './CompareProductInput';
-import IndicatorsDropDown from './IndicatorsDropDown';
+import ProductNameInput from './ProductNames';
+import CompareProductInput from './CompareProducts';
+import IndicatorsDropDown from './Indicators';
 import TemplatesDropDown from './TemplatesDropDown';
-// import LineChart from './MainChart';
 import VolumeChart from './VolumeChart'
-import SecondaryChart from './SecondaryChart'
+import SecondaryChart from './SecondaryCharts'
 import MultiSeries from './MultiSeries'
+import '../App.css'
 
 class Board extends React.Component {
 
@@ -43,6 +42,8 @@ class Board extends React.Component {
             data : [],
             volume: [],
             series : [],
+            unit1Chart : false,
+            unit2Chart : false
         }
     }
 
@@ -60,6 +61,14 @@ class Board extends React.Component {
 
     populate() {
         this.state.series.push({name: this.state.productName, data: this.state.test})
+    }
+
+    toggle1 = () => {
+        this.setState({unit1Chart : !this.state.unit1Chart})
+    }
+    
+    toggle2 = () => {
+        this.setState({unit2Chart : !this.state.unit2Chart})
     }
 
     monthly() {
@@ -95,61 +104,63 @@ class Board extends React.Component {
 
     render () { 
     return (
-        <div> 
-            <div className = "inputs">
-        <div>
-            <Box display="flex" flexDirection="row">
-            <ProductNameInput/>
-            <CompareProductInput/>
-            <IndicatorsDropDown/>
-            <TemplatesDropDown/>
-            </Box>
-        </div>
-            </div>
-        <div>
-            {/* <AllCharts/> */}
-            <div>
-        <div className="panels">
-            <div className="panel">
-              <div>
-                {/* <LineChart data={this.state.data}/> */}
-                <MultiSeries margin={0} series={this.state.series}/>
-              </div>
-            </div>
-            <div className="panel">
-              <div>
-              <VolumeChart volume={this.state.test}/>
-              </div>
-            </div>
-            <div className="panel">
-              <div>
-              <SecondaryChart  volume={this.state.test}/>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-            <div>
-        <div>
-            <Box display="flex" flexDirection="row" p={1} m={1} >
-                <button 
-                    onClick = {this.monthly()}>
-                    M</button>
-                <button>B</button>
-                <button>T</button>
-                <button>Q</button>
-                <button>S</button>
-                <button>Y</button>
-                <button>A</button>
-                <div className = "timebuttons">____</div>
-                <button>LINEAR</button>
-                <button>CYCLIC</button>
-            </Box>
-            </div>
+        <div className = "full"> 
+            <div className = "flex-container">
+                <div className = "flex-item0">
+                    <Box display = "flex" flexDirection = "row" height = {50}>
+                    <ProductNameInput/>
+                    <CompareProductInput/>
+                    <IndicatorsDropDown/>
+                    <TemplatesDropDown/>
+                    <button onClick={this.toggle1}>
+                        UNIT 1 CHART TOGGLE
+                    </button>
+                    <button onClick={this.toggle2}>
+                        UNIT 2 CHART TOGGLE
+                    </button>
+                    </Box>
+                </div>
+                <div className = "flex-item3">
+                    <MultiSeries margin={0} series={this.state.series}/>
+                </div>
+                <div className = "flex-item1">
+                    <VolumeChart volume={this.state.test}/>
+                </div>
+                {
+                    this.state.unit1Chart ? 
+                        <div className="flex-item2">
+                            <SecondaryChart  margin={0} series={this.state.series}/> 
+                        </div>
+                        :
+                        null
+                    }
+                {
+                    this.state.unit2Chart ? 
+                        <div className="flex-item2">
+                            <SecondaryChart  margin={0} series={this.state.series}/> 
+                        </div>
+                        : 
+                        null
+                    }
+                <div className = "flex-item0">
+                    <Box display="flex" flexDirection="row" p={1} m={1} >
+                        <button 
+                            onClick = {this.monthly()}>M</button>
+                        <button>B</button>
+                        <button>T</button>
+                        <button>Q</button>
+                        <button>S</button>
+                        <button>Y</button>
+                        <button>A</button>
+                        <div className = "timebuttons">____</div>
+                        <button>LINEAR</button>
+                        <button>CYCLIC</button>
+                    </Box>
+                </div>
             </div>
         </div>
         )
     }
-    }
+}
 
 export default Board;

@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-.inputs {
+/* .inputs {
   height: 60px;
   max-width: 300px;
 }
@@ -11,7 +11,7 @@
 .full {
   width: 100vh;
   height: 100vh;
-}
+} */
 
 .timebuttons {
   height: 50px;
@@ -52,4 +52,51 @@
   margin: 0;
   width: 100%;
   display: flex;
+}
+
+.full {
+  width: 100%;
+  height: 100vh;
+  background-color: lightblue;
+}
+
+.inputs {
+  width: 80%;
+  height: 5%;
+}
+
+.flex-container {
+  display: flex;
+  align-items: stretch;
+  background-color: #f1f1f1;
+  flex-direction: column;
+  height: 100%;
+}
+
+.flex-container > div {
+  background-color: white;
+  width: 100%;
+  text-align: center;
+}
+
+/* for inputs */
+.flex-item0 { 
+  flex-grow:auto;
+}
+
+/* for volume chart */
+.flex-item1 {
+  flex-grow:.5;
+  border: 1px solid rgba(0,0,0,.2);
+}
+
+/* for secondary charts */
+.flex-item2 {
+  flex-grow:1;
+  border: 1px solid rgba(0,0,0,.2);
+}
+
+/* for main chart */
+.flex-item3 {
+  flex-grow:3;
 }

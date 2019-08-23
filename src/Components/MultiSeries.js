@@ -13,9 +13,9 @@ function renderTooltip() {
 
 export default function MultiSeries (props){
     return (
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="99%" height="99%">
       <LineChart
-      margin={{top: 5, right:40, left: 0, bottom: 5,}}>
+          margin={{top: -5, right: 20, left: -10, bottom: -5,}}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" type="number" allowDuplicatedCategory={false} 
         tick={{fontSize: 8}}/>
