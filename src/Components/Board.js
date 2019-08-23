@@ -1,13 +1,15 @@
 import React from 'react'
 import Box from '@material-ui/core/Box';
 import ProductNameInput from './ProductNames';
-import CompareProductInput from './CompareProducts';
+import CompareProducts from './CompareProducts';
 import IndicatorsDropDown from './Indicators';
 import TemplatesDropDown from './TemplatesDropDown';
 import VolumeChart from './VolumeChart'
 import SecondaryChart from './SecondaryCharts'
 import MultiSeries from './MultiSeries'
 import '../App.css'
+
+const API = `http://35.202.20.87/products`
 
 class Board extends React.Component {
 
@@ -18,34 +20,37 @@ class Board extends React.Component {
             compareProds : [], // "value" needs to be passed in from CompareProductInput
             indicators : [], // "value" needs to be passed in from IndicatorsDropDown
             secondaryChart : [], // "value" needs to be passed in from TemplatesDropDown
-            dates : ["04/14/2017 05:00:00",
-            "04/13/2017 05:00:00",
-            "04/13/2017 05:00:00",
-            "04/13/2017 05:00:00",
-            "04/13/2017 05:00:00",
-            "04/12/2017 06:00:00",
-            "04/12/2017 05:00:00",
-            "04/12/2017 05:00:00",
-            "04/12/2017 05:00:00",
-            "04/12/2017 05:00:00"],
-            values : [351,
-            354,
-            355,
-            356,
-            353,
-            350,
-            350,
-            350,
-            357,
-            357],
-            test : [{x:1, y:6}, {x:2, y:2},{x:3, y:6},{x:4, y:7},{x:5, y:1},{x:6, y:6}, {x:7, y:2},{x:8, y:6},{x:9, y:7},{x:10, y:1},{x:11, y:6}, {x:12, y:2},{x:13, y:6},{x:14, y:7},{x:15, y:1},{x:16, y:6}, {x:17, y:2},{x:18, y:6},{x:19, y:7},{x:20, y:1}],
+            // dates : ["04/14/2017 05:00:00",
+            // "04/13/2017 05:00:00",
+            // "04/13/2017 05:00:00",
+            // "04/13/2017 05:00:00",
+            // "04/13/2017 05:00:00",
+            // "04/12/2017 06:00:00",
+            // "04/12/2017 05:00:00",
+            // "04/12/2017 05:00:00",
+            // "04/12/2017 05:00:00",
+            // "04/12/2017 05:00:00"],
+            // values : [351,
+            // 354,
+            // 355,
+            // 356,
+            // 353,
+            // 350,
+            // 350,
+            // 350,
+            // 357,
+            // 357],
+            // test : [{x:1, y:6}, {x:2, y:2},{x:3, y:6},{x:4, y:7},{x:5, y:1},{x:6, y:6}, {x:7, y:2},{x:8, y:6},{x:9, y:7},{x:10, y:1},{x:11, y:6}, {x:12, y:2},{x:13, y:6},{x:14, y:7},{x:15, y:1},{x:16, y:6}, {x:17, y:2},{x:18, y:6},{x:19, y:7},{x:20, y:1}],
             data : [],
             volume: [],
             series : [],
             unit1Chart : false,
-            unit2Chart : false
+            unit2Chart : false,
+            range : [2,10],
+            suggestions : [],
         }
     }
+    
 
     componentDidMount() {
         // formats data for charts
@@ -53,11 +58,33 @@ class Board extends React.Component {
         // {x : ___ , y : ___}
         // the .map function takes every date and assigns is to an x key, then converts it to a date in JS
         // ... takes every value and assigns it to a y key, the [i] assigns the same index value to the y value as the x value in the dictionary
-        const data = this.state.dates.map((x, i) => 
-                    ({x: new Date(x), y: this.state.values[i]}));
-        this.setState({data:data})
-        this.populate()
+
+        // const data = this.state.dates.map((x, i) => 
+        //             ({x: new Date(x), y: this.state.values[i]}));
+        // this.setState({data:data})
+        // this.populate()
+        fetch (API)
+            .then(blob => blob.json()).then(json => {
+                console.log(json.response)
+                console.log(json.response.data)
+                this.setState({suggestions:(json.response.data.map(suggestion => ({
+                    value: suggestion,
+                    label: suggestion,
+                })))})
+            })
     }
+
+    // componentDidUpdate() {
+    //     fetch (API + productName)
+    //         .then(blob => blob.json()).then(json => {
+    //             let price = json.trade_price
+    //             let time = json.trade_time
+    //             let data = time.map((x, i) => ({x:x, y:price[i]}))
+    //             console.log(this.state.data)
+    //             this.setState({data:data})
+    //         })
+    //         this.populate()
+    // }
 
     populate() {
         this.state.series.push({name: this.state.productName, data: this.state.test})
@@ -109,8 +136,8 @@ class Board extends React.Component {
                 <div className = "flex-item0">
                     <Box display = "flex" flexDirection = "row" height = {50}>
                     <ProductNameInput/>
-                    <CompareProductInput/>
                     <IndicatorsDropDown/>
+                    <CompareProducts/>
                     <TemplatesDropDown/>
                     <button onClick={this.toggle1}>
                         UNIT 1 CHART TOGGLE
@@ -121,7 +148,7 @@ class Board extends React.Component {
                     </Box>
                 </div>
                 <div className = "flex-item3">
-                    <MultiSeries margin={0} series={this.state.series}/>
+                    <MultiSeries margin={0} series={this.state.series} range={this.state.range}/>
                 </div>
                 <div className = "flex-item1">
                     <VolumeChart volume={this.state.test}/>

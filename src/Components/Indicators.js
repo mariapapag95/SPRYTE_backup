@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
@@ -10,18 +10,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 // SEE LINE 303
 
-// AJAX call to the indicators route to get list of indicators 
-const suggestions = [
-    'PLD',
-    'Pspec',
-    'EAR',
-    'ENA',
-    'Carga',
-    'ONS',
-  ].map(suggestion => ({
-    value: suggestion,
-    label: suggestion,
-  }));
+// AJAX call to the product names route to get list of product names 
+
+const API = "http://localhost:8000/indicator_names"
+
   
   const useStyles = makeStyles(theme => ({
     
@@ -294,14 +286,24 @@ const suggestions = [
     ValueContainer,
   };
   
-  export default function ProductNameInput() {
+  export default function Indicators() {
     const classes = useStyles();
     const theme = useTheme();
     const [single, setSingle] = React.useState(null);
+    const [suggestions, setSuggestions] = React.useState([])
+
+    useEffect(() => {
+        fetch (API)
+            .then(blob => blob.json()).then(json => {
+              setSuggestions(json.indicator_names.map(suggestion => ({
+                value: suggestion,
+                label: suggestion,
+              })))
+            })
+    }, [])
   
     function handleChangeSingle(value) {
       setSingle(value);
-// value needs to be passed to the charts 
     }
   
     const selectStyles = {
@@ -313,7 +315,8 @@ const suggestions = [
         },
       }),
     };
-
+    
+  
   
     return (
       <div className="margins">
@@ -329,7 +332,7 @@ const suggestions = [
                 shrink: true,
               },
             }}
-            placeholder="Select Product"
+            placeholder="Select Indicators"
             options={suggestions}
             components={components}
             value={single}

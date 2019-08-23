@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
@@ -8,17 +8,12 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const suggestions = [
-    'N CON MEN JUL/19 - Preço Fixo',
-    'NE CON MEN JUL/19 - Preço Fixo',
-    'NE CON MEN JUN/19 - Preço Fixo',
-    'NE CON MEN JAN/19 - Preço Fixo',
-    'N CON MEN JAN/19 - Preço Fixo',
-    'N CON MEN JUN/19 - Preço Fixo',
-  ].map(suggestion => ({
-    value: suggestion,
-    label: suggestion,
-  }));
+// SEE LINE 303
+
+// AJAX call to the product names route to get list of product names 
+
+const API = "http://localhost:8000/product_names"
+
   
   const useStyles = makeStyles(theme => ({
     
@@ -261,7 +256,6 @@ const suggestions = [
     selectProps: PropTypes.object.isRequired,
   };
   
-  
   function Menu(props) {
     return (
       <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
@@ -292,10 +286,21 @@ const suggestions = [
     ValueContainer,
   };
   
-  export default function ProductNameInput() {
+  export default function CompareProducts() {
     const classes = useStyles();
     const theme = useTheme();
     const [single, setSingle] = React.useState(null);
+    const [suggestions, setSuggestions] = React.useState([])
+
+    useEffect(() => {
+        fetch (API)
+            .then(blob => blob.json()).then(json => {
+              setSuggestions(json.product_names.map(suggestion => ({
+                value: suggestion,
+                label: suggestion,
+              })))
+            })
+    }, [])
   
     function handleChangeSingle(value) {
       setSingle(value);
@@ -310,9 +315,11 @@ const suggestions = [
         },
       }),
     };
+    
+  
   
     return (
-      <div className = "margins">
+      <div className="margins">
       <div className={classes.root}>
         <NoSsr>
           <Select

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
@@ -11,17 +11,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 // SEE LINE 303
 
 // AJAX call to the product names route to get list of product names 
-const suggestions = [
-    'N CON MEN JUL/19 - Preço Fixo',
-    'NE CON MEN JUL/19 - Preço Fixo',
-    'NE CON MEN JUN/19 - Preço Fixo',
-    'NE CON MEN JAN/19 - Preço Fixo',
-    'N CON MEN JAN/19 - Preço Fixo',
-    'N CON MEN JUN/19 - Preço Fixo',
-  ].map(suggestion => ({
-    value: suggestion,
-    label: suggestion,
-  }));
+
+const API = "http://35.202.20.87/products"
+
   
   const useStyles = makeStyles(theme => ({
     
@@ -298,10 +290,22 @@ const suggestions = [
     const classes = useStyles();
     const theme = useTheme();
     const [single, setSingle] = React.useState(null);
+    const [suggestions, setSuggestions] = React.useState([])
+
+    useEffect(() => {
+        fetch (API)
+            .then(blob => blob.json()).then(json => {
+              console.log(json.response)
+              console.log(json.response.data)
+              setSuggestions(json.response.data.map(suggestion => ({
+                value: suggestion,
+                label: suggestion,
+              })))
+            })
+    }, [])
   
     function handleChangeSingle(value) {
       setSingle(value);
-// value needs to be passed to the charts 
     }
   
     const selectStyles = {
@@ -313,7 +317,8 @@ const suggestions = [
         },
       }),
     };
-
+    
+  
   
     return (
       <div className="margins">
